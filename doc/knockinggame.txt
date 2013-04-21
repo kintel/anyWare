@@ -1,0 +1,17 @@
+Assuming computer is just a router
+
+* Wait until we're online (poll?)
+* Send login (get ack)
+
+* On received message: Call corresponding function
+
+* On received input: Send corresponding message
+
+* Not (yet) any state machine for system/game state apart from what's necessary to perform actions
+
+First try:
+* assume we're online
+* send login without ack
+* start game
+
+

@@ -1,0 +1,24 @@
+The router is some device talking serial to the arduino and TCP with
+the server, and is responsible for routing traffic between them, as
+well as managing the connection and keeping it alive.
+
+
+Arduino -> server:
+o Open serial port
+o Wait for ready command
+o For each read arduino message:
+  - convert to JSON
+  - send to server
+
+Server -> arduino:
+o Open TCP port
+o Send connect command
+o Wait for connect response (to validate protocol version etc.)
+o For each read server message
+  - convert to Arduino Cmd
+  - send to Arduino
+
+
+TODO:
+o Write a proof-of-concept node.js program to talk to the Arduino
+
