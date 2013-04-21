@@ -1,3 +1,10 @@
+# Intro
+
+We're currently using the Arduino-SerialCommand library (https://github.com/kroimon/Arduino-SerialCommand).
+
+We might change to JSON to simplify the router, e.g. using the aJson library:
+https://github.com/interactive-matter/aJson
+
 # Connection
 
 Identify client: 
@@ -37,6 +44,9 @@ KNOCK 0 500 500 1000
 
 Initial delay: -knock-knock--knock
 KNOCK 500 500 1000
+
+Shave&haircut call:
+KNOCK 398 303 141 437
 
 Correct shave&haircut answer:
 KNOCK 1000 500

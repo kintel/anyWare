@@ -15,6 +15,11 @@ void Knocker::playPattern(unsigned int *pattern, uint8_t length)
     delay(40);
     digitalWrite(this->output_pin, 0);
   }
+
+  // Reset the detector to be able to measure the initial pause
+  // before the response knock
+  this->is_recording = true;
+  this->last_knock_time = millis();
 }
 
 /*!

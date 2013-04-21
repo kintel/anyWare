@@ -21,4 +21,14 @@ o For each read server message
 
 TODO:
 o Write a proof-of-concept node.js program to talk to the Arduino
+  - Serial port name
+  - baud rate
+  - s = new serial.SerialPort(name, {baudrate: rate, parser: serial.parsers.readline('\n')}
+  - s.on('data', function(data) { }
+  - s.write(<string>)
+o Read:
+  - https://github.com/voodootikigod/node-serialport
+  - https://github.com/ecto/duino
+  - http://semu.github.io/noduino/
+
 

@@ -17,12 +17,23 @@ function Game() {
 Game.game = null;
 Game.states = {SLEEP: 0, CALL: 1};
 Game.shaveAndHaircutMessage = {
-  knockpattern: [0,500,250,250,500,1000,500]
+  knockpattern: [0,447,318,152,450]
 };
+//  knockpattern: [0,500,250,250,500]
+
+Game.prototype.stop = function() {
+  if (Game.game.timer) {
+    clearInterval(Game.game.timer);
+    delete Game.game.timer;
+  }
+  this.state = Game.states.SLEEP;
+}
 
 Game.prototype.shaveAndHaircut = function() {
   CyberObject.forEach(function(name, obj) {
-    obj.socket.write(JSON.stringify(Game.shaveAndHaircutMessage));
+    var sendstr = JSON.stringify(Game.shaveAndHaircutMessage);
+    debug("writing '" + sendstr + "'");
+    obj.socket.write(sendstr);
     obj.socket.write("\n");
   });
 }
@@ -32,7 +43,7 @@ Game.prototype.proximity = function(obj) {
     if (this.state == Game.states.SLEEP) {
       debug("Entering call state");
       this.state = Game.states.CALL;
-      Game.timer = setInterval(this.shaveAndHaircut, 5000);
+      Game.game.timer = setInterval(this.shaveAndHaircut, 10000);
     }
     obj.setActive(true);
   }
@@ -40,11 +51,7 @@ Game.prototype.proximity = function(obj) {
     obj.setActive(false);
     if (_.size(CyberObject.activeobjects) == 0) {
       debug("FIXME: shut down game");
-      if (Game.timer) {
-        clearInterval(Game.timer);
-        delete Game.timer;
-      }
-      this.state = Game.states.SLEEP;
+      Game.game.stop();
     }
   }
 }
@@ -56,7 +63,7 @@ Game.prototype.knockpattern = function(obj, pattern) {
                           pattern[1] > 400 && pattern[1] < 600);
   if (pattern_accepted) {
     CyberObject.forEach(function(name, obj) {
-      obj.socket.write("Open sesame!\n");
+      obj.socket.write(JSON.stringify({cmd: "open_sesame"}) + "\n");
     });
   }
 }
@@ -119,13 +126,15 @@ CyberObject.prototype.read = function(data) {
     if (this.currdata.charCodeAt(i) === 0x0a) {
       var jsonstring = this.currdata.slice(0, i).trim();
       this.currdata = this.currdata.slice(i);
-      debug("Received: " + jsonstring);
-      try {
-        var json = JSON.parse(jsonstring);
-        return json;
-      }
-      catch (err) {
-        console.log("Error: " + err);
+      if (jsonstring) {
+        debug("Received: " + jsonstring);
+        try {
+          var json = JSON.parse(jsonstring);
+          return json;
+        }
+        catch (err) {
+          console.log("Error: " + err + "\n     '" + jsonstring + "'");
+        }
       }
     }
   }
@@ -148,7 +157,7 @@ var server = net.createServer(function (socket) {
   socket.addListener("data", function (data) {
 
     var message = currobj.read(data);
-    
+
     if (message) {
       if (message.hasOwnProperty('login')) {
         debug("Got login: " + JSON.stringify(message));
@@ -176,7 +185,7 @@ var server = net.createServer(function (socket) {
         CyberObject.forEach(function(name, obj) {
           if (obj != currobj) obj.socket.write(currobj.name + " proximity is now " + currobj.proximity + "\n");
         });
-        Game.game.proximity(currobj);
+        if (Game.game) Game.game.proximity(currobj);
       }
       else if (message.hasOwnProperty('knockpattern')) {
         debug("Got knock pattern");
@@ -196,7 +205,7 @@ var server = net.createServer(function (socket) {
       obj.socket.write(currobj.name + " has left.\n");
     });
 
-    if (Game.game !== null && _.size(CyberObjects.allobjects) < 2) {
+    if (Game.game !== null && _.size(CyberObject.allobjects) < 2) {
       debug("Not enough players to continue playing\n");
       Game.game = null;
     }

@@ -1,3 +1,7 @@
+# Intro
+
+Messages are JSON encoded objects delimited by a newline character.
+
 # Connection
 
 Identify client: 
