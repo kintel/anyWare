@@ -189,7 +189,7 @@ var server = net.createServer(function (socket) {
       }
       else if (message.hasOwnProperty('knockpattern')) {
         debug("Got knock pattern");
-        Game.game.knockpattern(currobj, message.knockpattern);
+        if (Game.game) Game.game.knockpattern(currobj, message.knockpattern);
       }
       else {
         debug("Got unknown message: " + JSON.stringify(message));
