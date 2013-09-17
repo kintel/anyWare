@@ -1,0 +1,17 @@
+Manual testing against server:
+
+1) Connect two players
+
+
+telnet theroom.kintel.net 7000          # ..or evol.local
+{"login": "myself"}                     # Server should register the login
+telnet theroom.kintel.net 7000
+{"login": "other"}                      # Server should register the login
+
+In any window:
+{"proximity": 1}                        # Server should enter call state
+                                        # -> boxes should start knocking
+
+
+In any window:
+{"knockpattern": [1000, 500]}           # -> Open sesame

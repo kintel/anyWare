@@ -1,0 +1,12 @@
+Server:
+
+$ cd socketserver
+$ npm install
+$ DEBUG="*" node server.js
+
+Router:
+
+$ cd router
+$ npm install
+$ DEBUG="*" node app.js
+
