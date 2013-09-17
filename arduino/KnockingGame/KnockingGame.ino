@@ -108,7 +108,7 @@ void setup ()
   sCmd.addCommand("CMD", cmd_action);
   sCmd.setDefaultHandler(unrecognized);
 
-  send_login("Chambord");
+  send_login("Brock");
   digitalWrite(LED2_PIN, 1);
 }
 
